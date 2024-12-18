@@ -1,4 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page import="java.util.ArrayList"%>
+<%@ page import="java.util.List"%>
+<%@ page import="DAL.ProductDAO"%>
+<%@ page import="Model.*" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,17 +32,50 @@
             <li class="nav-item">
                 <a class="nav-link" href="login.jsp">Login</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="register.jsp">Register</a>
-            </li>
+            
+            <% 
+                HttpSession currentSession = request.getSession(); 
+                Boolean isLoggedIn = (Boolean) currentSession.getAttribute("isLoggedIn"); 
+            %>
+            
+            <c:if test="${isLoggedIn}">
+                <li class="nav-item">
+                    <a class="nav-link">Logout</a>
+                </li>
+            </c:if>
     </div>
 </nav>
+                
+<% 
+    ProductDAO productDAO = new ProductDAO(); 
+    ArrayList<Product> products = productDAO.getProduct();
 
-<!-- Main content -->
-<!--<div class="container mt-4">
-    <h1>Welcome to My Website!</h1>
-    <p>This is a simple page with a navbar.</p>
-</div>-->
+%>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Image</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (Product product : products) { %>
+            <tr>
+                <td><%= product.getProduct_id() %></td>
+                <td><%= product.getName() %></td>
+                <td><%= product.getPrice() %></td>
+                <td><%= product.getDescription() %></td>
+                <td>
+                    <img src="<%= product.getImage_url()%>" style="max-width: 100px; max-height: 100px">
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
 
 <!-- Add Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

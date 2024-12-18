@@ -4,21 +4,18 @@
  */
 package Controller;
 
-import DAL.UserDAO;
-import Model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Asus
  */
-public class LoginController extends HttpServlet {
+public class ProductController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,10 +34,10 @@ public class LoginController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginController</title>");
+            out.println("<title>Servlet ProductController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ProductController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -72,32 +69,7 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        
-        UserDAO userDAO = new UserDAO(); 
-        String foundPassword = ""; 
-        Boolean isLoggedIn = false; 
-        
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        
-        User user = userDAO.checkUserExist(email);
-        if (user.getUsername() == null) {
-            request.setAttribute("notification", "Email has not existed. Enter another email or register an account.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return; 
-        }
-        
-        foundPassword = userDAO.checkCorrespondingPassword(email); 
-        if (foundPassword.matches(password)){
-            isLoggedIn = true; 
-            session.setAttribute("isLoggedIn", isLoggedIn);
-            response.sendRedirect("index.jsp"); 
-        } else {
-            request.setAttribute("notification", "Incorrect password. Try again or reset password");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return; 
-        }   
+        processRequest(request, response);
     }
 
     /**
