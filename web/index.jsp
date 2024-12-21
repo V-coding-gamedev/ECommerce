@@ -37,6 +37,12 @@
             body {
                 overflow-x: hidden; /* vô hiệu hóa cuộn ngang */
             }
+            
+            .mt-3 .d-flex {
+                display: flex;
+                align-items: center; 
+            }
+            
         </style>
     </head>
     
@@ -65,11 +71,15 @@
                         <a class="nav-link" href="myProfile.jsp">My Profile</a>
                     </li>
                     
-                    <form action="logout" method="GET">
+                    <form action="cart" method="post">
                         <li class="nav-item">
-                            <a class="nav-link">Logout</a>
+                            <button type="submit" class="nav-link" style="background: none; border: none; cursor: pointer;">Cart</button>
                         </li>
                     </form>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout">Logout</a>
+                    </li>
                     
                     <% } else { %>
                     <li class="nav-item">
@@ -109,8 +119,12 @@
                                                         phần tử cuối nằm sát bên phải, 
                                                         khoảng trống giữa sẽ được phân bổ đều 
                         -->
-                        <div class="mt-3"> 
-                            <a href="#" class="btn btn-primary">Add to Cart</a>
+                        <div class="mt-3 d-flex"> 
+                            <form action="cart" method="post" style="margin-right: 8px;">
+                                <input type="hidden" name="productId" value="<%= product.getProduct_id() %>">
+                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                            </form>
+                            
                             <a href="#" class="btn btn-primary">Buy Now</a>                
                         </div>
                     </div>
@@ -126,13 +140,3 @@
 
     </body>
 </html>
-
-<script>
-    function logout(){
-        localStorage.removeItem('isLoggedIn');
-        sessionStorage.removeItem('isLoggedIn'); 
-        sessionStorage.clear(); 
-        
-        window.location.href= "index.jsp"; 
-    }
-</script>

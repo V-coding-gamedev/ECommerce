@@ -4,10 +4,10 @@
  */
 package Controller;
 
-import DAL.UserDAO;
-import Model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Asus
  */
-public class LoginController extends HttpServlet {
+public class CartController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,18 +32,7 @@ public class LoginController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LoginController</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet LoginController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -69,40 +58,23 @@ public class LoginController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
+    List<Integer> listOfProductId = new ArrayList<>();
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        
         HttpSession session = request.getSession();
+        String userIDString = session.getAttribute("userId").toString(); 
+        int userId = Integer.parseInt(userIDString); 
         
-        UserDAO userDAO = new UserDAO(); 
-        String foundPassword = ""; 
-        Boolean isLoggedIn = false; 
-        int userId = 0; 
+        listOfProductId.add(productId); 
         
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        
-        User user = userDAO.checkUserExist(email);
-        if (user.getUsername() == null) {
-            request.setAttribute("notification", "Email has not existed. Enter another email or register an account.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return; 
-        }
-        
-        foundPassword = userDAO.checkCorrespondingPassword(email); 
-        if (foundPassword.matches(password)){
-            isLoggedIn = true; 
-            session.setAttribute("isLoggedIn", isLoggedIn);
-            
-            userId = userDAO.findUserId(email);
-            session.setAttribute("userId", userId);
-            
-            response.sendRedirect("index.jsp"); 
-        } else {
-            request.setAttribute("notification", "Incorrect password. Try again or reset password");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return; 
-        }   
+        request.setAttribute("userId", userId);
+        request.setAttribute("listOfProductId", listOfProductId);
+        request.getRequestDispatcher("myCart.jsp").forward(request, response);
     }
 
     /**

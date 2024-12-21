@@ -1,9 +1,3 @@
-<%-- 
-    Document   : login
-    Created on : Dec 8, 2024, 10:37:42 PM
-    Author     : Asus
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

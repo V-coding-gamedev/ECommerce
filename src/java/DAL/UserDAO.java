@@ -133,40 +133,36 @@ public class UserDAO extends DBContext {
         return 0; 
     }
     
-    
+    public int findUserId(String email){
+        int userId = 0; 
+        
+        try {
+            DBContext db = new DBContext(); 
+            Connection con = db.getConnection(); 
+            
+            String sqlQuery = "select user_id from Users where email = '" + email + "'";
+            PreparedStatement stm = con.prepareStatement(sqlQuery);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()){
+                userId = rs.getInt("user_id"); 
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        
+        return userId; 
+    }
 
     public static void main(String[] args) {
         UserDAO userDAO = new UserDAO();
         ArrayList<User> users = userDAO.getUser();
-
-//        // Printing the users
-//        for (User user : users) {
-//            System.out.println(user.getUser_id() + " - " + user.getUsername()); // Ensure the User class has a proper toString() method
-//        }
         
-//        User user = userDAO.checkUserExist("caohv9@gmail.com"); 
-//        System.out.println(user.getUser_id() + "-" + user.getUsername() + "-" + user.getEmail());
+        int userId = userDAO.findUserId("vietchhe170297@fpt.edu.vn"); 
+        System.out.println("userId found: " + userId);
 
-//        String username = "john_doe";
-//        String email = "john.doe@example.com";
-//        String password = "password123";
-//        String fullName = "John Doe";
-//        String phoneNumber = "0935091066"; 
-//        String address = "Tokyo"; 
-//        String role = "Customer"; 
-//        
-//        int result = userDAO.register(username, email, password, fullName, phoneNumber, address, role); 
+//        int result = userDAO.resetPassword("john.doe@example.com", "Abc@12345");
 //        System.out.println("Result of register: " + result);
-        
-//        String foundPassword = userDAO.checkCorrespondingPassword("john.doe@example.com"); 
-//        if (foundPassword.matches("")){
-//            System.out.println("Not found");
-//        } else {
-//            System.out.println("Found");
-//        }
-
-        int result = userDAO.resetPassword("john.doe@example.com", "Abc@12345");
-        System.out.println("Result of register: " + result);
     
     }
 }
